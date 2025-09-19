@@ -1,0 +1,51 @@
+{
+  "StoryReels": {
+    "user1": {
+      "userId": "user1",
+      "username": "Alice",
+      "avatar": "https://i.pravatar.cc/150?img=1",
+      "stories": [
+        {
+          "id": "story1",
+          "url": "https://picsum.photos/400/700",
+          "type": "image",
+          "caption": "Good morning 🌞",
+          "duration": 5000,
+          "timestamp": "2025-09-11T06:30:00Z"
+        }
+      ],
+      "isAllViewed": false
+    },
+    "user2": {
+      "userId": "user2",
+      "username": "Bob",
+      "avatar": "https://i.pravatar.cc/150?img=2",
+      "stories": [
+        {
+          "id": "story2",
+          "url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
+          "type": "video",
+          "caption": "My first reel 🎥",
+          "duration": 10000,
+          "timestamp": "2025-09-11T07:00:00Z"
+        }
+      ],
+      "isAllViewed": false
+    }
+  },
+  "chatThreads": {
+    "thread1": {
+      "id": "thread1",
+      "participants": ["user1", "user2"],
+      "lastMessage": {
+        "id": "msg1",
+        "senderId": "user1",
+        "receiverId": "user2",
+        "text": "Hey Bob, how are you?",
+        "type": "text",
+        "timestamp": "2025-09-11T08:00:00Z"
+      },
+      "updatedAt": "2025-09-11T08:00:00Z"
+    }
+  }
+}

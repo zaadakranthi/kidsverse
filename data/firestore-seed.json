@@ -1,0 +1,85 @@
+{
+  "__collections__": {
+    "users": {
+      "user1": {
+        "id": "user1",
+        "name": "Alice",
+        "sudoName": "Ali",
+        "email": "alice@example.com",
+        "role": "student",
+        "class": "5",
+        "school": "Kids World School",
+        "syllabus": "CBSE",
+        "area": "Hyderabad",
+        "state": "Telangana",
+        "languages": ["English", "Telugu"],
+        "sports": ["Cricket", "Badminton"],
+        "willing_to_tutor": false,
+        "coins": 50,
+        "avatar": "https://i.pravatar.cc/150?u=alice",
+        "transactions": [],
+        "parental_controls": { "max_screen_time": 120, "history_enabled": true },
+        "achievements": [],
+        "following": [],
+        "createdAt": "2025-09-11T07:00:00Z",
+        "updatedAt": "2025-09-11T07:00:00Z"
+      },
+      "user2": {
+        "id": "user2",
+        "name": "Bob",
+        "sudoName": "Bobby",
+        "email": "bob@example.com",
+        "role": "student",
+        "class": "6",
+        "school": "Kids World School",
+        "syllabus": "CBSE",
+        "area": "Hyderabad",
+        "state": "Telangana",
+        "languages": ["English"],
+        "sports": ["Football"],
+        "willing_to_tutor": true,
+        "coins": 80,
+        "avatar": "https://i.pravatar.cc/150?u=bob",
+        "transactions": [],
+        "parental_controls": { "max_screen_time": 100, "history_enabled": false },
+        "achievements": [],
+        "following": ["user1"],
+        "createdAt": "2025-09-11T07:05:00Z",
+        "updatedAt": "2025-09-11T07:05:00Z"
+      }
+    },
+    "storyReels": {
+      "user1": {
+        "id": "user1",
+        "username": "Alice",
+        "avatar": "https://i.pravatar.cc/150?u=alice",
+        "stories": [
+          {
+            "id": "story1",
+            "type": "image",
+            "url": "https://placekitten.com/400/300",
+            "duration": 5000,
+            "timestamp": "2025-09-11T08:00:00Z",
+            "caption": "Good morning 🌞"
+          }
+        ],
+        "updatedAt": "2025-09-11T08:00:00Z"
+      }
+    },
+    "chatThreads": {
+      "thread_user1_user2": {
+        "id": "thread_user1_user2",
+        "participants": ["user1", "user2"],
+        "lastMessage": {
+          "id": "msg1",
+          "senderId": "user1",
+          "receiverId": "user2",
+          "text": "Hey Bob 👋",
+          "type": "text",
+          "timestamp": "2025-09-11T08:10:00Z"
+        },
+        "updatedAt": "2025-09-11T08:10:00Z"
+      }
+    }
+  }
+}

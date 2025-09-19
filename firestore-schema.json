@@ -1,0 +1,350 @@
+
+{
+  "notes": "This document outlines the Firestore database schema for the EduVerse application. It includes collections, document structures, indexes, and sample data.",
+  "collections": {
+    "users": {
+      "documentId": "{userId}",
+      "description": "Stores user profile information. The document ID is the Firebase Auth UID.",
+      "fields": {
+        "email": "string",
+        "name": "string",
+        "sudoName": "string",
+        "role": "string ('student', 'teacher', 'admin')",
+        "avatarUrl": "string (URL)",
+        "class": "string",
+        "school": "string",
+        "syllabus": "string",
+        "location": "geopoint",
+        "interests": "array<string>",
+        "coins": "number (integer)",
+        "subscriptionStatus": "string ('free', 'premium')",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      },
+      "subcollections": {
+        "transactions": {
+          "documentId": "{transactionId}",
+          "description": "Subcollection for a user's Knowledge Coin transaction history.",
+          "fields": {
+            "type": "string ('earn', 'spend')",
+            "amount": "number",
+            "description": "string",
+            "createdAt": "timestamp"
+          }
+        }
+      },
+      "sampleDocument": {
+        "_id": "user_12345",
+        "email": "student@example.com",
+        "name": "Priya Sharma",
+        "sudoName": "science_guru",
+        "role": "student",
+        "avatarUrl": "https://picsum.photos/seed/u1/100/100",
+        "class": "10th",
+        "school": "Delhi Public School",
+        "syllabus": "CBSE",
+        "location": "geopoint(28.7041, 77.1025)",
+        "interests": ["Physics", "Coding", "Cricket"],
+        "coins": 1500,
+        "subscriptionStatus": "premium",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      }
+    },
+    "stories": {
+      "documentId": "{userId}",
+      "description": "Stores all stories for a single user. The document ID is the user's UID.",
+      "fields": {
+        "username": "string",
+        "avatar": "string (URL)",
+        "updatedAt": "timestamp (updated when a new story is added)",
+        "stories": "array<map>",
+        "stories.id": "string",
+        "stories.type": "string ('image' | 'video')",
+        "stories.url": "string (URL to media in Firebase Storage)",
+        "stories.caption": "string",
+        "stories.duration": "number (milliseconds)",
+        "stories.timestamp": "timestamp"
+      },
+      "sampleDocument": {
+        "_id": "user_001",
+        "username": "Alice",
+        "avatar": "https://picsum.photos/seed/u1/100/100",
+        "updatedAt": "SERVER_TIMESTAMP",
+        "stories": [
+          {
+            "id": "story_001",
+            "url": "https://firebasestorage.googleapis.com/v0/b/.../alice_story1.jpg",
+            "type": "image",
+            "caption": "Good Morning 🌞",
+            "duration": 5000,
+            "timestamp": "SERVER_TIMESTAMP"
+          }
+        ]
+      }
+    },
+    "posts": {
+      "documentId": "{postId}",
+      "description": "Stores user-generated content like videos and Q&A.",
+      "fields": {
+        "authorId": "reference (to users/{userId})",
+        "authorInfo": "map (denormalized author data like name, avatar)",
+        "type": "string ('video', 'qa')",
+        "content": "string",
+        "mediaUrl": "string (URL to video or image)",
+        "subject": "string",
+        "class": "string",
+        "likesCount": "number (integer)",
+        "commentsCount": "number (integer)",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      },
+      "subcollections": {
+        "comments": {
+          "documentId": "{commentId}",
+          "fields": {
+            "authorId": "reference (to users/{userId})",
+            "authorInfo": "map",
+            "text": "string",
+            "createdAt": "timestamp"
+          }
+        },
+        "likes": {
+          "documentId": "{userId}",
+          "fields": {
+            "likedAt": "timestamp"
+          }
+        }
+      },
+      "sampleDocument": {
+        "_id": "post_abcde",
+        "authorId": "/users/user_12345",
+        "authorInfo": {
+          "name": "Priya Sharma",
+          "avatarUrl": "https://picsum.photos/seed/u1/100/100"
+        },
+        "type": "qa",
+        "content": "Can anyone explain Newton's Third Law with a simple example?",
+        "mediaUrl": null,
+        "subject": "Physics",
+        "class": "10th",
+        "likesCount": 42,
+        "commentsCount": 5,
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      }
+    },
+    "games": {
+      "documentId": "{gameId}",
+      "description": "Stores brain games and quizzes created by teachers or admins.",
+      "fields": {
+        "creatorId": "reference (to users/{userId})",
+        "title": "string",
+        "description": "string",
+        "gameType": "string ('Quiz', 'WordScramble', 'MemoryMatch')",
+        "subject": "string",
+        "questions": "array<map> (for quizzes)",
+        "entryFee": "number (integer)",
+        "prize": "string",
+        "totalPlays": "number (integer)",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      },
+      "subcollections": {
+        "scores": {
+          "documentId": "{userId}",
+          "description": "Stores scores for each user who played the game.",
+          "fields": {
+            "score": "number",
+            "playedAt": "timestamp"
+          }
+        }
+      },
+      "sampleDocument": {
+        "_id": "game_zyxw",
+        "creatorId": "/users/teacher_67890",
+        "title": "Indian History Challenge",
+        "description": "Test your knowledge on the Mughal Empire.",
+        "gameType": "Quiz",
+        "subject": "History",
+        "questions": [
+          { "question": "Who built the Taj Mahal?", "options": ["Akbar", "Shah Jahan", "Jahangir", "Aurangzeb"], "correctAnswer": "Shah Jahan" }
+        ],
+        "entryFee": 10,
+        "prize": "200 Coins",
+        "totalPlays": 152,
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      }
+    },
+    "studyRooms": {
+      "documentId": "{roomId}",
+      "description": "Stores information about live events and study rooms.",
+      "fields": {
+        "hostId": "reference (to users/{userId})",
+        "hostInfo": "map",
+        "name": "string",
+        "description": "string",
+        "subject": "string",
+        "startTime": "timestamp",
+        "status": "string ('upcoming', 'live', 'completed')",
+        "participantCount": "number",
+        "isSponsored": "boolean",
+        "createdAt": "timestamp"
+      },
+      "sampleDocument": {
+        "_id": "room_112233",
+        "hostId": "/users/teacher_67890",
+        "hostInfo": { "name": "Mr. Verma", "avatarUrl": "..." },
+        "name": "Calculus Crash Course",
+        "description": "Covering differentiation and integration before the exams.",
+        "subject": "Mathematics",
+        "startTime": "timestamp",
+        "status": "upcoming",
+        "participantCount": 0,
+        "isSponsored": false,
+        "createdAt": "timestamp"
+      }
+    },
+    "tutors": {
+      "documentId": "{tutorId}",
+      "description": "Stores profiles for users who are also tutors. Document ID is the user's UID.",
+      "fields": {
+        "bio": "string",
+        "subjects": "array<string>",
+        "rating": "number (avg score)",
+        "reviewCount": "number (integer)",
+        "pricePerHour": "number (in coins)",
+        "isVerified": "boolean",
+        "updatedAt": "timestamp"
+      },
+      "sampleDocument": {
+        "_id": "teacher_67890",
+        "bio": "10+ years of experience in teaching Physics for IIT-JEE.",
+        "subjects": ["Physics", "Mathematics"],
+        "rating": 4.9,
+        "reviewCount": 88,
+        "pricePerHour": 1000,
+        "isVerified": true,
+        "updatedAt": "timestamp"
+      }
+    },
+    "flaggedContent": {
+      "documentId": "{flagId}",
+      "description": "Stores reports of inappropriate content for admin review.",
+      "fields": {
+        "reporterId": "reference (to users/{userId})",
+        "contentId": "reference (to posts/{postId} or other content)",
+        "contentType": "string ('post', 'comment')",
+        "reason": "string",
+        "status": "string ('pending', 'reviewed')",
+        "reviewerId": "reference (to users/{adminId})",
+        "createdAt": "timestamp"
+      },
+      "sampleDocument": {
+        "_id": "flag_rtyui",
+        "reporterId": "/users/user_12345",
+        "contentId": "/posts/post_fghjk",
+        "contentType": "comment",
+        "reason": "Hate speech",
+        "status": "pending",
+        "reviewerId": null,
+        "createdAt": "timestamp"
+      }
+    },
+     "chats": {
+      "documentId": "{chatId}",
+      "description": "Stores metadata for each one-to-one chat.",
+      "fields": {
+        "participants": "array<string> (user IDs)",
+        "participantInfo": "map (denormalized user data)",
+        "lastMessage": "string",
+        "lastSenderId": "string",
+        "lastTimestamp": "timestamp",
+        "isTyping": "map ({userId: boolean})"
+      },
+      "subcollections": {
+        "messages": {
+          "documentId": "{messageId}",
+          "description": "Stores all messages for a single chat.",
+          "fields": {
+            "senderId": "string",
+            "text": "string",
+            "mediaUrl": "string (URL to image in Firebase Storage)",
+            "timestamp": "timestamp",
+            "read": "boolean"
+          }
+        }
+      },
+      "sampleDocument": {
+        "_id": "user1_user2",
+        "participants": ["user1", "user2"],
+        "participantInfo": {
+          "user1": { "name": "Alex Johnson", "avatar": "...", "sudoName": "rising_star" },
+          "user2": { "name": "Benny Smith", "avatar": "...", "sudoName": "code_ninja" }
+        },
+        "lastMessage": "Hey! How's it going?",
+        "lastSenderId": "user1",
+        "lastTimestamp": "SERVER_TIMESTAMP",
+        "isTyping": {
+            "user1": false,
+            "user2": false
+        }
+      }
+    }
+  },
+  "indexes": {
+    "notes": "Firestore automatically creates single-field indexes. The following are suggested composite indexes to support specific application queries.",
+    "posts": [
+      {
+        "name": "trending_posts_by_subject",
+        "description": "For fetching trending posts within a specific subject.",
+        "fields": [
+          { "fieldPath": "subject", "order": "ASCENDING" },
+          { "fieldPath": "likesCount", "order": "DESCENDING" },
+          { "fieldPath": "createdAt", "order": "DESCENDING" }
+        ]
+      },
+      {
+        "name": "posts_by_class_and_subject",
+        "description": "For filtering the feed by both class and subject.",
+        "fields": [
+          { "fieldPath": "class", "order": "ASCENDING" },
+          { "fieldPath": "subject", "order": "ASCENDING" },
+          { "fieldPath": "createdAt", "order": "DESCENDING" }
+        ]
+      }
+    ],
+    "tutors": [
+      {
+        "name": "tutors_by_subject_and_rating",
+        "description": "For searching tutors by subject, ordered by their rating.",
+        "fields": [
+          { "fieldPath": "subjects", "arrayConfig": "CONTAINS" },
+          { "fieldPath": "rating", "order": "DESCENDING" }
+        ]
+      }
+    ],
+    "games": [
+      {
+        "name": "game_leaderboard_scores",
+        "description": "To query top scores for a specific game.",
+        "collectionGroup": "scores",
+        "fields": [
+          { "fieldPath": "score", "order": "DESCENDING" },
+          { "fieldPath": "playedAt", "order": "DESCENDING" }
+        ]
+      }
+    ],
+     "chats": [
+      {
+        "name": "user_chats",
+        "description": "For querying all chats a user is a participant in.",
+        "fields": [
+          { "fieldPath": "participants", "arrayConfig": "CONTAINS" },
+          { "fieldPath": "lastTimestamp", "order": "DESCENDING" }
+        ]
+      }
+    ]
+  }
+}
